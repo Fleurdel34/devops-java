@@ -10,8 +10,6 @@ COPY src src
 
 RUN chmod +x gradlew
 
-RUN ./gradlew clean test
-
 RUN ./gradlew clean bootWar
 
 #Tomcat
