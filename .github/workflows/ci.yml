@@ -1,0 +1,98 @@
+name: CI
+
+permissions:
+  contents: write
+  checks: write
+  pull-requests: write
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check Angular ou JAVA project
+        id: detect
+        run: |
+          if [ -f "package.json" ] || [ -f "*/package.json" ]; then
+            echo "type=angular" >> $GITHUB_OUTPUT
+          elif [ -f "build.gradle" ] || [ -f "*/build.gradle" ]; then
+            echo "type=java" >> $GITHUB_OUTPUT
+          else
+            echo "No Angular ou Java project detected."
+            exit 1
+          fi
+        ###Angular
+      - name: Setup Node.js
+        if: ${{ steps.detect.outputs.type == 'angular' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.12.0
+          cache: 'npm'
+
+      - name: Install npm
+        if: ${{ steps.detect.outputs.type == 'angular' }}
+        run: npm install -g npm@10.2.4
+
+      - name: Install dependencies
+        if: ${{ steps.detect.outputs.type == 'angular' }}
+        run: npm ci
+
+      - name: Build
+        if: ${{ steps.detect.outputs.type == 'angular' }}
+        run: npm run build
+
+      - name: test
+        if: ${{ steps.detect.outputs.type == 'angular' }}
+        run: npm test -- --code-coverage
+
+      - name: coverage test
+        if: ${{ steps.detect.outputs.type == 'angular' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage-report
+          path: coverage/olympic-games-starter/
+
+      ###Java
+      - name: Setup Java
+        if: ${{ steps.detect.outputs.type == 'java' }}
+        uses: actions/setup-java@v5
+        with:
+          java-version: 21
+          distribution: temurin
+          cache: 'gradle'
+
+      - name: Setup Gradle
+        if: ${{ steps.detect.outputs.type == 'java' }}
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Install dependencies
+        if: ${{ steps.detect.outputs.type == 'java' }}
+        run: ./gradlew build
+
+      - name: test
+        if: ${{ steps.detect.outputs.type == 'java' }}
+        run: ./gradlew clean test
+
+      - name: Packaging
+        if: ${{ steps.detect.outputs.type == 'java' }}
+        run: ./gradlew bootWar
+
+      - name: Publish test results
+        if: ${{ steps.detect.outputs.type == 'java' }}
+        uses: dorny/test-reporter@v1
+        with:
+          name: JUnit Tests
+          path: '**/build/test-results/test/*.xml'
+          reporter: java-junit
