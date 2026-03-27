@@ -1,5 +1,14 @@
 {
   "name": "fr.oc.devops",
-  "version": "0.2.4",
-  "private": true
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.6",
+    "@semantic-release/npm": "^12.0.2",
+    "@semantic-release/release-notes-generator": "^14.1.0",
+    "semantic-release": "^24.2.9"
+  }
 }
