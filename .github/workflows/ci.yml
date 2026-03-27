@@ -25,7 +25,7 @@ jobs:
       - name: Check Angular ou JAVA project
         id: detect
         run: |
-          if [ -f "package.json" ] || [ -f "*/package.json" ]; then
+          if [ -f "angular.json" ]; then
             echo "type=angular" >> $GITHUB_OUTPUT
           elif [ -f "build.gradle" ] || [ -f "*/build.gradle" ]; then
             echo "type=java" >> $GITHUB_OUTPUT

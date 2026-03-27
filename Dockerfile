@@ -5,6 +5,7 @@ WORKDIR /app
 COPY gradlew .
 COPY gradle gradle
 COPY build.gradle settings.gradle ./
+COPY package.json .
 COPY src src
 
 
