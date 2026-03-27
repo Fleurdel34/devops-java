@@ -141,7 +141,7 @@ jobs:
 
 
   release:
-    name: Create Release Angular
+    name: Create Release Java
     needs: [ test, build ]
     runs-on: ubuntu-latest
 
