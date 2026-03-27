@@ -26,3 +26,10 @@ The build job is identical for both projects:no project‑type detection is need
 Docker image is built using the project’s Dockerfile
 Tag format: branch-sha
 Image is published to the GitHub Container Registry (GHCR)
+
+# Job release for project java :
+
+Setup Node
+Install Semantic Release and plugin
+Run npx semantic-release
+Build and push image Docker with tag (version + branch + sha)

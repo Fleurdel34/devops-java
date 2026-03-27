@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 plugins {
 	id 'org.openapi.generator' version '7.4.0'
 	id 'org.springframework.boot' version '3.2.4'
@@ -8,7 +10,8 @@ plugins {
 }
 
 group = 'fr.oc.devops'
-version = '0.2.4'
+def packageJson = new JsonSlurper().parse(file("package.json"))
+version = packageJson["version"]
 
 repositories {
 	mavenCentral()
